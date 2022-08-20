@@ -14,7 +14,8 @@ library(robustbase)
 # working_dir <- "toy_data"
 # Times <- c(21,16,12,4,2,1,0.25,0) * 24
 
-# If just calling from the command line, you can pass them as arguments using this
+# If just calling from the command line, you can pass them as arguments using this code section.
+# If using nextflow to paralellize the analysis across multiple datasets use this option.
 # args = commandArgs(trailingOnly=TRUE)
 # 
 # if (length(args) < 2) {
