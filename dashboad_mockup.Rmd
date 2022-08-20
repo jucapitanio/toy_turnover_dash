@@ -1,0 +1,213 @@
+---
+title: "toy data"
+output: flexdashboard::flex_dashboard
+---
+
+```{r}
+# IMPORTANT: THESE PARAMETERS DEPEND ON THE EXPERIMENT, CHANGE THEM HERE IF CREATING A DASHBOARD.
+# Otherwise see toy_data_analysis.R
+
+working_dir <- "toy_data"
+Times <- c(21,16,12,4,2,1,0.25,0)
+
+##########################################################################################################
+################################ No need to do anything else but knit this Rmd file ######################
+##########################################################################################################
+```
+
+```{r}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+# Also requires DT, markdown
+```
+
+```{r}
+source("toy_data_analysis.R")
+load("toy_data/script_results/necessary_data.RData")
+
+create_dt <- function(x){
+  DT::datatable(x, extensions = 'Buttons', options = list(dom = 'Blfrtip', buttons = c('copy', 'csv'), bPaginate = FALSE), rownames = FALSE, class = 'cell-border stripe', filter = 'top')
+}
+```
+
+Data overview {data-orientation=rows}
+=====================================     
+
+Row
+-----------------------------------------
+
+### Proteome labelling (no normalization)
+    
+```{r}
+ggplotly(p_no_norm)
+```
+
+### Proteome labelling (after normalization)
+
+```{r}
+ggplotly(p_all_norm)
+``` 
+
+
+### Median proteome synthesis and decay
+```{r}
+ggplotly(p_syndec_all_nls)
+```
+
+Row
+-----------------------------------------
+
+### Number of proteins present across pipeline steps
+
+```{r}
+create_dt(pip_step_prot)
+```   
+
+Data per cell compartment {data-orientation=rows}
+=====================================     
+
+Row
+-----------------------------------------
+
+### Proteome labelling (after normalization)
+```{r fig.width=10, fig.height=2}
+ggplotly(p_all_norm_CC)
+```
+
+Row
+-----------------------------------------
+
+### Median proteome synthesis and decay
+
+```{r}
+ggplotly(p_syndec_CC_nls)
+```   
+
+Half-life distribution {data-orientation=rows}
+===================================== 
+
+Row{.tabset .tabset-fade}
+-----------------------------------------
+
+### Half-life histogram
+    
+```{r fig.height=2, fig.width=6}
+ggplotly(p_thalf_hist)
+```
+
+### Half-life density
+
+```{r fig.height=2, fig.width=6}
+ggplotly(p_thalf_dens)
+```
+
+Row{.tabset .tabset-fade}
+-----------------------------------------
+
+### Half-life summary
+```{r}
+create_dt(prot_median_all)
+```
+
+### Half-life summary (no Inf)
+```{r}
+create_dt(prot_median_all_noInf)
+```
+
+Half-life per cell compartment {data-orientation=rows}
+===================================== 
+
+Row{.tabset .tabset-fade}
+-----------------------------------------
+
+### Half-life histogram
+    
+```{r fig.height=2, fig.width=6}
+ggplotly(p_thalf_hist_CC)
+```
+
+### Half-life density
+
+```{r fig.height=2, fig.width=6}
+ggplotly(p_thalf_dens_CC)
+```
+
+Row{.tabset .tabset-fade}
+-----------------------------------------
+
+### Half-life summary
+```{r}
+create_dt(prot_median_all_CC)
+```
+
+### Half-life summary (no Inf)
+```{r}
+create_dt(prot_median_all_noInf_CC)
+```
+
+Half-life comparisons {data-orientation=rows}
+===================================== 
+
+Row
+-----------------------------------------
+
+### Half-life entire cell {data-width=250}
+    
+```{r fig.height=2, fig.width=6}
+ggplotly(p_thalf_box) %>% layout(boxmode = "group")
+```
+
+### Half-life per cell compartment {data-width=750}
+
+```{r fig.height=2, fig.width=6}
+ggplotly(p_thalf_box_CC) %>% layout(boxmode = "group") %>% hide_legend()
+```
+
+Row
+-----------------------------------------
+
+### Half-life synthesis and decay comparison
+```{r}
+ggplotly(p_syn_deg_thalf)
+```
+
+Half-life correlation {data-orientation=rows}
+===================================== 
+
+Column 
+----------------------------------------
+### Half-life correlation (pearson)
+```{r}
+p_cor
+```
+
+### Half-life correlation (spearman)
+```{r}
+s_cor
+```
+
+
+Protein half-life table {data-orientation=rows}
+=====================================     
+
+Row 
+-----------------------------------------
+
+### Protein half-life is a weighted median of all peptides (unique pep wt = 10, non-U = 1)
+
+```{r}
+create_dt(All_mods_2)
+```
+    
+Protein half-life per cell compartment table {data-orientation=rows}
+=====================================     
+
+Row 
+-----------------------------------------
+
+### Protein half-life is a median of all peptides (unique pep wt = 10, non-U = 1)
+
+```{r}
+create_dt(All_mods_2_CC)
+```
